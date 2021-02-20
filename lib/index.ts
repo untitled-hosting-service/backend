@@ -1,8 +1,5 @@
-import Server from "./Server";
-import { ServerStatus } from "./ServerStatus";
 import { v4 as uuidv4 } from "uuid";
 import { ApolloServer } from "apollo-server";
-import { SCHEMA } from "./Schema";
 import words from "random-words";
 
 const servers: Server[] = Array(100).fill(undefined).map(() => {
