@@ -15,7 +15,8 @@
     "eslint": "eslint \"*/**/*.{js,ts,tsx}\" --color",
     "eslint:fix": "eslint \"*/**/*.{js,ts,tsx}\" --fix --color",
     "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write ."
+    "prettier:fix": "prettier --write .",
+    "deploy": "npm run build && npm prune --production && rm -f dist/lambda.zip && zip -q -r dist/lambda.zip node_modules dist"
   },
   "repository": {
     "type": "git",
