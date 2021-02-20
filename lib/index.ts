@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from "apollo-server-lambda";
 import words from "random-words";
 import { Server, ServerStatus, User, typeDefs } from "@mira-hq/model/dist/index";
 
@@ -53,7 +53,4 @@ const resolvers = {
 
 const server = new ApolloServer({ typeDefs: typeDefs, resolvers });
 
-// The `listen` method launches a web server.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+exports.graphqlHandler = server.createHandler();
