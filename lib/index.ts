@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { ApolloServer } from "apollo-server";
 import words from "random-words";
+import { Server, ServerStatus, User, typeDefs } from "@mira-hq/model/dist/index";
 
 const servers: Server[] = Array(100).fill(undefined).map(() => {
   return generateRandomServer();
@@ -10,11 +11,19 @@ function generateRandomServer(): Server {
   return {
     uuid: uuidv4(),
     serverName: words(),
-    status: randomEnum(ServerStatus) || ServerStatus.RUNNING,
+    status: randomEnum(ServerStatus) || ServerStatus.Running,
     playersOnline: getRandomInt(0, 10),
     maxUptime: getRandomInt(0, 10000),
     uptime: getRandomInt(0, 10000),
-    address: `${words()}.mira-hq.com`
+    address: `${words()}.mira-hq.com`,
+    owner: generateRandomUser()
+  }
+}
+
+function generateRandomUser(): User {
+  return {
+    uuid: uuidv4(),
+    email: `${words()}@gmail.com`
   }
 }
 
@@ -42,7 +51,7 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs: SCHEMA, resolvers });
+const server = new ApolloServer({ typeDefs: typeDefs, resolvers });
 
 // The `listen` method launches a web server.
 server.listen().then(({ url }) => {
