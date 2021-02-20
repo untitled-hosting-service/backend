@@ -30,10 +30,10 @@
   "dependencies": {
     "@mira-hq/model": "^1.0.11",
     "@types/uuid": "^8.3.0",
-    "apollo-server": "^2.21.0",
     "apollo-server-lambda": "^2.21.0",
     "graphql": "^15.5.0",
     "random-words": "^1.1.1",
+    "react": "^17.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
