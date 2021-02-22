@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
-import { ApolloServer } from "apollo-server-lambda";
+import {v4 as uuidv4} from "uuid";
+import {ApolloServer as ApolloLambdaServer} from "apollo-server-lambda";
+import {ApolloServer} from "apollo-server";
 import words from "random-words";
-import { Server, ServerStatus, User, typeDefs } from "@mira-hq/model/dist/index";
+import {Server, ServerStatus, User, typeDefs} from "@mira-hq/model/dist/index";
 
 const servers: Server[] = Array(100).fill(undefined).map(() => {
   return generateRandomServer();
@@ -51,6 +52,17 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs: typeDefs, resolvers });
+const isProduction = false;
 
-exports.graphqlHandler = server.createHandler();
+if (isProduction) {
+  const server = new ApolloLambdaServer({typeDefs: typeDefs, resolvers});
+
+  exports.graphqlHandler = server.createHandler();
+} else {
+  const server = new ApolloServer({typeDefs: typeDefs, resolvers});
+
+  server.listen().then(({url}) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
+}
+
