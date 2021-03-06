@@ -124,3 +124,8 @@ jobs:
           aws_region: us-east-1
           function_name: MiraHqBackend
           zip_file: deploy.zip
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy.zip
+          path: deploy.zip
