@@ -59,19 +59,5 @@ const resolvers = {
   },
 };
 
-const isProduction = false;
-
-const server: ApolloLambdaServer = new ApolloLambdaServer({
-  typeDefs: typeDefs,
-  resolvers,
-});
-
-export const graphQlHandler = server.createHandler();
-
-if (!isProduction) {
-  const server = new ApolloServer({ typeDefs: typeDefs, resolvers });
-
-  void server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
-  });
-}
+const server = new ApolloLambdaServer({ typeDefs: typeDefs, resolvers });
+export const graphqlHandler = server.createHandler();
