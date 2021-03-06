@@ -95,6 +95,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dist
+          path: dist
       - name: Zip artifacts
         run: zip -r deploy.zip dist
       - name: Deploy lambda
