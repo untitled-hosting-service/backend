@@ -95,3 +95,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dist
+      - name: Zip artifacts
+        run: zip -r deploy.zip dist
+      - name: Deploy lambda
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: ${{ secrets.CDK_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.CDK_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: MiraHqBackend
+          zip_file: deploy.zip
