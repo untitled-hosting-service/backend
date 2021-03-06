@@ -56,8 +56,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: out
-          path: out
+          name: dist
+          path: dist
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -94,4 +94,4 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: out
+          name: dist
