@@ -1,5 +1,5 @@
 import Datastore from "./datastore";
-import { Server } from "@mira-hq/model/dist/index";
+import { Server, ServerStatus, ServerType } from "@mira-hq/model";
 import DynamoDB from "aws-sdk/clients/dynamodb";
 
 export default class DynamoDbDatastore implements Datastore {
@@ -24,12 +24,20 @@ export default class DynamoDbDatastore implements Datastore {
       const items = response.Items || [];
 
       servers = items.map((item) => {
+        console.log(item);
+
         return {
           uuid: item.pk1.S,
+          serverName: item.serverName?.S,
+          status: item.status?.S,
+          address: item.address?.S,
+          type: item.type?.S,
+          playersOnline: item.type?.N,
+          owner: {
+            uuid: item.owner?.S,
+          },
         } as Server;
       });
-
-      console.log(servers);
 
       return servers;
     } catch (error) {
@@ -47,6 +55,24 @@ export default class DynamoDbDatastore implements Datastore {
         },
         sk1: {
           S: server.uuid,
+        },
+        serverName: {
+          S: server.serverName,
+        },
+        status: {
+          S: server.status,
+        },
+        address: {
+          S: server.address?.toString() || undefined,
+        },
+        type: {
+          S: server.type?.toString(),
+        },
+        playersOnline: {
+          N: server.playersOnline?.toString() || "0",
+        },
+        owner: {
+          S: server.owner?.uuid,
         },
       },
     };

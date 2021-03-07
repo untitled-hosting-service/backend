@@ -1,26 +1,41 @@
 import { ApolloServer as ApolloLambdaServer } from "apollo-server-lambda";
 import { ApolloServer } from "apollo-server";
 import DynamoDbDatastore from "./datastore/dynamodb-datastore";
-import { Server, ServerStatus, typeDefs } from "@mira-hq/model/dist/index";
+import {
+  Server,
+  typeDefs,
+  MutationCreateServerArgs,
+  ServerStatus,
+} from "@mira-hq/model";
 import { v4 as uuid } from "uuid";
 
 const isProduction = true;
 const isPreProduction = !isProduction;
 const datastore = new DynamoDbDatastore();
 
-const newServer = {
-  uuid: uuid(),
-} as Server;
-
-datastore.putServer(newServer);
-
 const resolvers = {
   Query: {
     servers: () => datastore.getServers(),
   },
   Mutation: {
-    createServer: (first: unknown, second: unknown, third: unknown) => {
-      console.log(first, second, third);
+    createServer: (
+      first: unknown,
+      second: MutationCreateServerArgs,
+      third: unknown
+    ): Server => {
+      const server: Server = {
+        uuid: uuid(),
+        serverName: second.serverName || "",
+        status: ServerStatus.Created,
+        owner: {
+          uuid: uuid(),
+          email: "shepherdjerred@gmail.com",
+        },
+      };
+
+      datastore.putServer(server);
+
+      return server;
     },
   },
 };

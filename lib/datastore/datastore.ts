@@ -1,4 +1,4 @@
-import { Server, User } from "@mira-hq/model/dist/index";
+import { Server, User } from "@mira-hq/model";
 
 export default interface Datastore {
   getServers(): Promise<Server[]>;
