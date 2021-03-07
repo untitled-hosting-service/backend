@@ -8,8 +8,6 @@ export default class DynamoDbDatastore implements Datastore {
   constructor() {
     this.dynamodb = new DynamoDB({
       region: "us-east-1",
-      accessKeyId: undefined,
-      secretAccessKey: undefined,
     });
   }
 
