@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon lib/index.ts",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "true",
@@ -29,16 +30,19 @@
   },
   "homepage": "https://github.com/mira-hq/backend#readme",
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
     "@mira-hq/model": "^1.0.11",
     "@types/uuid": "^8.3.0",
     "apollo-server": "^2.21.0",
     "apollo-server-lambda": "^2.21.0",
+    "aws-sdk": "^2.858.0",
     "graphql": "^15.5.0",
     "random-words": "^1.1.1",
     "react": "^17.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@tsconfig/node14": "^1.0.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.28",
@@ -50,6 +54,7 @@
     "husky": "^4.3.8",
     "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
+    "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5"

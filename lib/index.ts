@@ -1,63 +1,40 @@
-import { v4 as uuidv4 } from "uuid";
 import { ApolloServer as ApolloLambdaServer } from "apollo-server-lambda";
 import { ApolloServer } from "apollo-server";
-import words from "random-words";
-import {
-  Server,
-  ServerStatus,
-  User,
-  typeDefs,
-} from "@mira-hq/model/dist/index";
+import Datastore from "./datastore/datastore";
+import DynamoDbDatastore from "./datastore/dynamodb-datastore";
+import InMemoryDatastore from "./datastore/in-memory-datastore";
+import { Server, typeDefs } from "@mira-hq/model/dist/index";
+import { v4 as uuid } from "uuid";
 
-const servers: Server[] = Array(100)
-  .fill(undefined)
-  .map(() => {
-    return generateRandomServer();
-  });
+const isProduction = true;
+const isPreProduction = !isProduction;
+let datastore: Datastore;
 
-function generateRandomServer(): Server {
-  return {
-    uuid: uuidv4(),
-    serverName: words(),
-    status: randomEnum(ServerStatus) || ServerStatus.Running,
-    playersOnline: getRandomInt(0, 10),
-    maxUptime: getRandomInt(0, 10000),
-    uptime: getRandomInt(0, 10000),
-    address: `${words()}.mira-hq.com`,
-    owner: generateRandomUser(),
-  };
+if (isProduction) {
+  datastore = new InMemoryDatastore();
+} else {
+  datastore = new DynamoDbDatastore();
 }
 
-function generateRandomUser(): User {
-  return {
-    uuid: uuidv4(),
-    email: `${words()}@gmail.com`,
-  };
-}
+const newServer = {
+  uuid: uuid(),
+} as Server;
 
-// Generating random whole numbers in JavaScript in a specific range?
-// https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// How to get a random enum in TypeScript?
-// https://stackoverflow.com/questions/44230998/how-to-get-a-random-enum-in-typescript
-function randomEnum<T>(anEnum: T): T[keyof T] {
-  const enumValues = (Object.keys(anEnum)
-    .map((n) => Number.parseInt(n))
-    .filter((n) => !Number.isNaN(n)) as unknown) as T[keyof T][];
-  const randomIndex = Math.floor(Math.random() * enumValues.length);
-  return enumValues[randomIndex];
-}
+datastore.putServer(newServer);
 
 const resolvers = {
   Query: {
-    servers: () => servers,
+    servers: () => datastore.getServers(),
   },
 };
 
 const server = new ApolloLambdaServer({ typeDefs: typeDefs, resolvers });
 export const graphqlHandler = server.createHandler();
+
+if (isPreProduction) {
+  const developmentServer = new ApolloServer({ typeDefs: typeDefs, resolvers });
+
+  void developmentServer.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
+}
