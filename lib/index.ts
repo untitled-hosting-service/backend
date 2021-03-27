@@ -22,13 +22,14 @@ import {
   VerifyErrors,
   VerifyOptions,
 } from "jsonwebtoken";
+import { clientId, domain } from "./auth";
 
 const isProduction = false;
 const isPreProduction = !isProduction;
 const datastore = new DynamoDbDatastore();
 
 const client = new JwksClient({
-  jwksUri: `https://mira-hq.us.auth0.com/.well-known/jwks.json`,
+  jwksUri: `https://${domain}/.well-known/jwks.json`,
 });
 
 function getKey(header: JwtHeader, callback: SigningKeyCallback) {
@@ -42,8 +43,8 @@ function getKey(header: JwtHeader, callback: SigningKeyCallback) {
 }
 
 const options: VerifyOptions = {
-  audience: "1OSHUpbrfygF5A9JpcywmascOW7ilnIl",
-  issuer: `https://mira-hq.us.auth0.com/`,
+  audience: clientId,
+  issuer: `https://${domain}/`,
   algorithms: ["RS256"],
 };
 
