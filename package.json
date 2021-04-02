@@ -31,10 +31,11 @@
   "homepage": "https://github.com/mira-hq/backend#readme",
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
-    "@mira-hq/model": "^1.0.17",
+    "@mira-hq/model": "^1.0.19",
     "@types/auth0-js": "^9.14.2",
     "apollo-server": "^2.21.0",
     "apollo-server-lambda": "^2.21.0",
+    "auth0-js": "^9.15.0",
     "aws-sdk": "^2.858.0",
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",

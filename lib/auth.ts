@@ -10,7 +10,7 @@ class Auth {
 
   constructor() {
     this.auth0 = new auth0.WebAuth({
-      domain: "mira-hq.us.auth0.com",
+      domain: domain,
       clientID: clientId,
       redirectUri: "http://localhost:3000/callback",
       audience: `https://${domain}/userinfo`,
@@ -32,7 +32,7 @@ class Auth {
     return this.idToken;
   }
 
-  handleAuthentication() {
+  handleAuthentication(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.auth0.parseHash(
         (
@@ -65,7 +65,7 @@ class Auth {
     });
   }
 
-  silentAuth() {
+  silentAuth(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.auth0.checkSession({}, (err, authResult) => {
         if (err) return reject(err);

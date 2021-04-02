@@ -49,7 +49,7 @@ const options: VerifyOptions = {
 };
 
 interface ApolloContext {
-  user: Promise<unknown | undefined>;
+  user: string;
 }
 
 const createServerMutation: IFieldResolver<
@@ -93,22 +93,21 @@ const context: ContextFunction<ExpressContext, Context<ApolloContext>> = ({
   req,
 }): Context<ApolloContext> => {
   const token = req.headers.authorization || "";
-  const user = new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      getKey,
-      options,
-      (err: VerifyErrors | null, decoded: unknown | undefined) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(decoded);
+  jwt.verify(
+    token,
+    getKey,
+    options,
+    (err: VerifyErrors | null, decoded: unknown | undefined) => {
+      if (err) {
+        console.error(err);
+        throw err;
       }
-    );
-  });
+      console.log(decoded);
+    }
+  );
 
   return {
-    user,
+    user: "",
   };
 };
 
